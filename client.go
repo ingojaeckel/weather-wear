@@ -27,7 +27,7 @@ func (p HttpWeatherProvider) GetWeather(cityID string) (SimpleWeatherResponse, e
 	if err != nil {
 		return SimpleWeatherResponse{}, err
 	}
-	// fmt.Printf("body = %s\n", string(body))
+	// TODO add support for handling error JSON responses
 	var data WeatherResponse
 	if err := json.Unmarshal(body, &data); err != nil {
 		return SimpleWeatherResponse{}, err
