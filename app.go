@@ -10,5 +10,5 @@ func main() {
 	http.HandleFunc("/rest/forecast", GetForecast)
 
   fmt.Println("Running..")
-  http.ListenAndServe(":8000", nil)
+  http.ListenAndServe(":8080", nil)
 }
