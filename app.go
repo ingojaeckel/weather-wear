@@ -6,8 +6,8 @@ import (
 )
 
 func main() {
-	http.HandleFunc("/health", GetHealth)
-	http.HandleFunc("/rest/forecast", GetForecast)
+	http.HandleFunc("/_ah/health", getHealth)
+	http.HandleFunc("/rest/forecast", getForecast)
 
 	fmt.Println("Running..")
 

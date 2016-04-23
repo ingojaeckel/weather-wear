@@ -1,10 +1,11 @@
 package main
 
 import (
-  "fmt"
-  "net/http"
+	"fmt"
+	"net/http"
 )
 
-func GetHealth(w http.ResponseWriter, r *http.Request) {
-  fmt.Fprint(w, "ok")
+func getHealth(w http.ResponseWriter, r *http.Request) {
+	// TODO add memcache connectivity
+	fmt.Fprint(w, "ok")
 }

@@ -7,7 +7,7 @@ import (
 )
 
 // TODO return JSON, return proper HTTP status codes
-func GetForecast(w http.ResponseWriter, r *http.Request) {
+func getForecast(w http.ResponseWriter, r *http.Request) {
 	q := r.URL.Query()
 	c, ok := q["cityId"]
 	if !ok {
