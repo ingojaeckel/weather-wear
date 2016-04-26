@@ -1,9 +1,10 @@
 runtime: go
 vm: true
 
+# use .1 values to force use of f1-micro instances
 resources:
-  cpu: .5
-  memory_gb: 0.5
+  cpu: .1
+  memory_gb: .1
   disk_size_gb: 10
 
 automatic_scaling:
