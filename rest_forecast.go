@@ -6,39 +6,51 @@ import (
 	"net/http"
 )
 
-// TODO return JSON, return proper HTTP status codes
 func getForecast(w http.ResponseWriter, r *http.Request) {
 	q := r.URL.Query()
 	c, ok := q["cityId"]
 	if !ok {
-		io.WriteString(w, fmt.Sprintf("Missing multiple cityId"))
+		w.WriteHeader(http.StatusBadRequest)
+		result := RecommendationResponse{Status: 1, Error: "Missing cityId"}
+		w.Header().Add("Content-Type", "application/json")
+		io.WriteString(w, result.String())
 		return
 	}
 	if len(c) != 1 {
-		io.WriteString(w, fmt.Sprintf("Invalid number of cityIds: %d", len(c)))
+		w.WriteHeader(http.StatusBadRequest)
+		result := RecommendationResponse{Status: 2, Error: fmt.Sprintf("Invalid number of cityIds: %d", len(c))}
+		w.Header().Add("Content-Type", "application/json")
+		io.WriteString(w, result.String())
 		return
 	}
 
 	cityID := c[0]
 	cached, err := cacheGet(cityID)
-	if err == nil && len(cached) > 0 {
+	if cacheEnabled && err == nil && len(cached) > 0 {
 		io.WriteString(w, cached)
 		return
 	}
 
 	s, err := getWeatherProvider()
 	if err != nil {
-		io.WriteString(w, fmt.Sprintf("Failed: %s", err.Error()))
+		w.WriteHeader(http.StatusInternalServerError)
+		result := RecommendationResponse{Status: 3, Error: err.Error()}
+		w.Header().Add("Content-Type", "application/json")
+		io.WriteString(w, result.String())
 		return
 	}
 
 	resp, err := s.GetWeather(cityID)
 	if err != nil {
-		io.WriteString(w, fmt.Sprintf("Failed: %s", err.Error()))
+		w.WriteHeader(http.StatusInternalServerError)
+		result := RecommendationResponse{Status: 4, Error: err.Error()}
+		w.Header().Add("Content-Type", "application/json")
+		io.WriteString(w, result.String())
 		return
 	}
 
-	result := GetRecommendation(resp).String()
-	io.WriteString(w, result)
-	cachePut(cityID, result)
+	result := RecommendationResponse{Recommendation: GetRecommendation(resp).String()}
+	w.Header().Add("Content-Type", "application/json")
+	io.WriteString(w, result.String())
+	cachePut(cityID, result.String(), forecastCacheTTLSeconds)
 }

@@ -8,16 +8,19 @@ import (
 )
 
 func getHealth(w http.ResponseWriter, r *http.Request) {
-	item := &memcache.Item{
-		Key:   "health_check",
-		Value: []byte{},
+	if cacheEnabled {
+		item := &memcache.Item{
+			Key:   "health_check",
+			Value: []byte{},
+		}
+		// check memcache connectivity
+		if err := memcacheClient.Set(item); err != nil {
+			w.WriteHeader(http.StatusInternalServerError)
+			fmt.Fprintf(w, "memcache connectivity: %s", err.Error())
+			return
+		}
 	}
-	// check memcache connectivity
-	if err := memcacheClient.Set(item); err != nil {
-		w.WriteHeader(http.StatusInternalServerError)
-		fmt.Fprintf(w, "memcache connectivity: %s", err.Error())
-		return
-	}
+
 	w.WriteHeader(http.StatusOK)
 	fmt.Fprint(w, "ok")
 }
