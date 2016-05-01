@@ -1,0 +1,4 @@
+cron:
+- description: periodic forecast job
+  url: /rest/forecast?cityId=5391997
+  schedule: every 2 hours
