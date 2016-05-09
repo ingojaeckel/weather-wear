@@ -38,9 +38,9 @@ func getForecast(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	val := GetRecommendation(resp).String()
-	writeJSONResponse(w, http.StatusOK, RecommendationResponse{Recommendation: val})
-	cachePut(cityID, val, forecastCacheTTLSeconds)
+	recResp := RecommendationResponse{Recommendation: GetRecommendation(resp).String()}
+	writeJSONResponse(w, http.StatusOK, recResp)
+	cachePut(cityID, recResp.String(), forecastCacheTTLSeconds)
 }
 
 func writeJSONResponse(w http.ResponseWriter, status int, r RecommendationResponse) {
