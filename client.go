@@ -6,6 +6,7 @@ import (
 	"io/ioutil"
 	"net/http"
 	"strings"
+	"time"
 )
 
 type WeatherProvider interface {
@@ -19,10 +20,13 @@ type HttpWeatherProvider struct {
 func (p HttpWeatherProvider) GetWeather(cityID string) (SimpleWeatherResponse, error) {
 	url := fmt.Sprintf("http://api.openweathermap.org/data/2.5/weather?id=%s&APPID=%s&units=%s", cityID, p.APIKey, "metric")
 
+	before := time.Now().Nanosecond()
 	res, err := http.Get(url)
 	if err != nil {
 		return SimpleWeatherResponse{}, err
 	}
+	durationMs := float64((time.Now().Nanosecond() - before) / 1000 / 1000)
+	metricsClient.TimeInMilliseconds("response.time.ms", durationMs, []string{}, 1.0)
 	body, err := ioutil.ReadAll(res.Body)
 	if err != nil {
 		return SimpleWeatherResponse{}, err
