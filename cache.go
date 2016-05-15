@@ -10,10 +10,7 @@ import (
 
 var memcacheClient *memcache.Client
 
-func initializeCache() {
-	if !cacheEnabled {
-		return
-	}
+func initializeCache() bool {
 	host := os.Getenv("MEMCACHE_PORT_11211_TCP_ADDR")
 	if host == "" {
 		host = "localhost"
@@ -23,6 +20,12 @@ func initializeCache() {
 		port = "11211"
 	}
 	memcacheClient = memcache.New(fmt.Sprintf("%s:%s", host, port))
+
+	if _, err := memcacheClient.Get("some_key"); err != nil {
+		fmt.Printf("Failed to connect to memcache host %s:%s. Disabling cache. Error: %s\n", host, port, err.Error())
+		return false
+	}
+	return true
 }
 
 func cachePut(key string, val string, expirationSeconds int32) error {

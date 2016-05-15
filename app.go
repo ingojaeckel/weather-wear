@@ -12,7 +12,7 @@ func main() {
 
 	fmt.Println("Running..")
 
-	initializeCache()
+	cacheEnabled = initializeCache()
 
 	log.Fatal(http.ListenAndServe(":8080", nil))
 }
