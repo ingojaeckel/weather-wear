@@ -4,9 +4,15 @@ import (
 	"fmt"
 	"io"
 	"net/http"
+
+	"google.golang.org/appengine"
+	"google.golang.org/appengine/log"
 )
 
 func getForecast(w http.ResponseWriter, r *http.Request) {
+	ctx := appengine.NewContext(r)
+	log.Infof(ctx, "this is a test")
+
 	q := r.URL.Query()
 	c, ok := q["cityId"]
 	if !ok {
