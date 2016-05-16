@@ -4,6 +4,7 @@ import (
 	"encoding/json"
 	"fmt"
 	"io/ioutil"
+	"log"
 	"net/http"
 	"strings"
 	"time"
@@ -27,8 +28,11 @@ func (p HttpWeatherProvider) GetWeather(cityID string) (SimpleWeatherResponse, e
 		return SimpleWeatherResponse{}, err
 	}
 	if metricsEnabled {
+		log.Print("Sending metrics to DD")
 		durationMs := float64((time.Now().Nanosecond() - before) / 1000 / 1000)
 		metricsClient.TimeInMilliseconds("response.time.ms", durationMs, []string{}, 1.0)
+	} else {
+		log.Print("Skip sending metrics to DD")
 	}
 	body, err := ioutil.ReadAll(res.Body)
 	if err != nil {

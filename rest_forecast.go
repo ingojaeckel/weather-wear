@@ -3,6 +3,7 @@ package main
 import (
 	"fmt"
 	"io"
+	"log"
 	"net/http"
 )
 
@@ -21,7 +22,7 @@ func getForecast(w http.ResponseWriter, r *http.Request) {
 	cityID := c[0]
 	cached, err := cacheGet(cityID)
 	if cacheEnabled && err == nil && len(cached) > 0 {
-		fmt.Println("cache hit")
+		log.Println("Cache hit")
 		io.WriteString(w, cached)
 		return
 	}

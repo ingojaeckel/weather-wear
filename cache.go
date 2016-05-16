@@ -48,9 +48,9 @@ func cacheGet(key string) (string, error) {
 	}
 	item, err := memcacheClient.Get(key)
 	if err != nil {
-		fmt.Printf("cache error: %s\n", err.Error())
+		log.Printf("Cache error: %s\n", err.Error())
 		return "", err
 	}
+	log.Print("Cache hit")
 	return string(item.Value), nil
-
 }
