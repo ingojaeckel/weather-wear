@@ -12,7 +12,9 @@ func main() {
 
 	fmt.Println("Initializing..")
 	cacheEnabled = initializeCache()
-	initializeMetrics()
+	if err := initializeMetrics(); err != nil {
+		fmt.Printf("Failed to initialize metrics client: %s", err.Error())
+	}
 
 	fmt.Println("Running..")
 	log.Fatal(http.ListenAndServe(":8080", nil))

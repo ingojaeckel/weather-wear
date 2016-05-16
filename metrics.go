@@ -2,7 +2,6 @@ package main
 
 import (
 	"fmt"
-	"log"
 
 	"github.com/DataDog/datadog-go/statsd"
 )
@@ -12,18 +11,18 @@ const statsdPort = 8125
 
 var metricsClient *statsd.Client
 
-func initializeMetrics() bool {
-
+func initializeMetrics() error {
 	metricsClient, err := statsd.New(fmt.Sprintf("%s:%d", statsdHostname, statsdPort))
 
 	if err != nil {
-		log.Fatal(err)
+		metricsEnabled = false
+		return err
 	}
 	// prefix every metric with the app name
-	metricsClient.Namespace = "flubber."
-	// send the EC2 availability zone as a tag with every metric
-	metricsClient.Tags = append(metricsClient.Tags, "us-east-1a")
-	metricsClient.Gauge("request.duration", 1.2, nil, 1)
+	metricsClient.Namespace = "dev."
+	metricsClient.Tags = append(metricsClient.Tags, fmt.Sprintf("appid:weather-wea"))
+	metricsClient.SimpleEvent("initialized", "datadog has been initialized")
 
-	return true
+	metricsEnabled = true
+	return nil
 }
