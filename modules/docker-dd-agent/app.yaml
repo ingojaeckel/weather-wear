@@ -1,0 +1,15 @@
+runtime: custom
+vm: true
+service: docker-dd-agent
+
+# use .1 values to force use of f1-micro instances
+resources:
+  cpu: 1
+  memory_gb: 1
+  disk_size_gb: 10
+
+manual_scaling:
+  instances: 1
+
+health_check:
+  enable_health_check: True
