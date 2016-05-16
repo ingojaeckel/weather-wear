@@ -3,6 +3,7 @@ package main
 import (
 	"errors"
 	"fmt"
+	"log"
 	"os"
 
 	"github.com/bradfitz/gomemcache/memcache"
@@ -22,9 +23,10 @@ func initializeCache() bool {
 	memcacheClient = memcache.New(fmt.Sprintf("%s:%s", host, port))
 
 	if _, err := memcacheClient.Get("some_key"); err != nil {
-		fmt.Printf("Failed to connect to memcache host %s:%s. Disabling cache. Error: %s\n", host, port, err.Error())
+		log.Printf("Failed to connect to memcache host %s:%s. Disabling cache. Error: %s\n", host, port, err.Error())
 		return false
 	}
+	log.Println("Enabled caching")
 	return true
 }
 
