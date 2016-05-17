@@ -2,6 +2,6 @@
 
 PREFIX=https://weather-wea.appspot.com
 
-curl -XGET ${PREFIX}/rest/forecast?cityId=5391997
+ab -n 1000 -c 2 ${PREFIX}/rest/forecast?cityId=5391997
 
 echo 
