@@ -1,0 +1,14 @@
+runtime: custom
+vm: true
+service: binary-test 
+
+resources:
+  cpu: .1
+  memory_gb: .1
+  disk_size_gb: 10
+
+manual_scaling:
+  instances: 1
+
+health_check:
+  enable_health_check: False 
