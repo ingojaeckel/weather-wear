@@ -18,21 +18,27 @@ type HttpWeatherProvider struct {
 	APIKey string
 }
 
+func timed(call func() (*http.Response, error), metricsKey string) (*http.Response, error) {
+	if !metricsEnabled {
+		log.Print("Skip sending metrics to DD")
+		return call()
+	}
+
+	log.Print("Sending metrics to DD")
+	before := time.Now().Nanosecond()
+	r, e := call()
+	durationMs := float64((time.Now().Nanosecond() - before) / 1000 / 1000)
+	metricsClient.TimeInMilliseconds(metricsKey, durationMs, []string{}, 1.0)
+
+	return r, e
+}
+
 func (p HttpWeatherProvider) GetWeather(cityID string) (SimpleWeatherResponse, error) {
 	url := fmt.Sprintf("http://api.openweathermap.org/data/2.5/weather?id=%s&APPID=%s&units=%s", cityID, p.APIKey, "metric")
 
-	before := time.Now().Nanosecond()
-	// TODO wrap HTTP call in timed() function
-	res, err := http.Get(url)
+	res, err := timed(func() (*http.Response, error) { return http.Get(url) }, "response.time.ms")
 	if err != nil {
 		return SimpleWeatherResponse{}, err
-	}
-	if metricsEnabled {
-		log.Print("Sending metrics to DD")
-		durationMs := float64((time.Now().Nanosecond() - before) / 1000 / 1000)
-		metricsClient.TimeInMilliseconds("response.time.ms", durationMs, []string{}, 1.0)
-	} else {
-		log.Print("Skip sending metrics to DD")
 	}
 	body, err := ioutil.ReadAll(res.Body)
 	if err != nil {

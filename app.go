@@ -16,7 +16,10 @@ func main() {
 	cacheEnabled = initializeCache()
 	if err := initializeMetrics(); err != nil {
 		log.Printf("Failed to initialize metrics client: %s", err.Error())
+	} else {
+		log.Println("Initialized metrics")
 	}
+	metricsClient.Count("some.counter", 1, []string{}, 1.0)
 
 	log.Println("Running..")
 	log.Fatal(http.ListenAndServe(":8080", nil))

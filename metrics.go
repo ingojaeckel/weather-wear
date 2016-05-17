@@ -7,7 +7,9 @@ import (
 	"github.com/DataDog/datadog-go/statsd"
 )
 
-const statsdHostname = "docker-dd-agent-dot-weather-wea.appspot.com"
+// External IP address of docker-dd-agent instance determined by running the following
+// curl -H "Metadata-Flavor: Google" http://metadata.google.internal/computeMetadata/v1/instance/network-interfaces/0/access-configs/0/external-ip
+const statsdHostname = "146.148.87.97"
 const statsdPort = 8125
 
 var metricsClient *statsd.Client
