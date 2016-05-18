@@ -28,8 +28,9 @@ func timed(call func() (*http.Response, error), metricsKey string) (*http.Respon
 	before := time.Now().Nanosecond()
 	r, e := call()
 	durationMs := float64((time.Now().Nanosecond() - before) / 1000 / 1000)
-	metricsClient.TimeInMilliseconds(metricsKey, durationMs, []string{}, 1.0)
-
+	if err := metricsClient.TimeInMilliseconds(metricsKey, durationMs, []string{}, 1.0); err != nil {
+		log.Printf("failed to report timing: %s\n", err.Error())
+	}
 	return r, e
 }
 

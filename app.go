@@ -19,8 +19,12 @@ func main() {
 	} else {
 		log.Println("Initialized metrics")
 	}
-	metricsClient.Count("some.counter", 1, []string{}, 1.0)
-
+	if err := metricsClient.Count("some.counter", 1, []string{}, 1.0); err != nil {
+		log.Printf("Failed to report counter: %s\n", err.Error())
+	}
+	if err := metricsClient.TimeInMilliseconds("some.timer", 1, []string{}, 1.0); err != nil {
+		log.Printf("Failed to report timer: %s\n", err.Error())
+	}
 	log.Println("Running..")
 	log.Fatal(http.ListenAndServe(":8080", nil))
 }
