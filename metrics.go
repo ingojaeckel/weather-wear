@@ -2,20 +2,19 @@ package main
 
 import (
 	"fmt"
+	"io/ioutil"
 	"log"
+	"net/http"
 
 	"github.com/DataDog/datadog-go/statsd"
 )
 
-// External IP address of docker-dd-agent instance determined by running the following
-// curl -H "Metadata-Flavor: Google" http://metadata.google.internal/computeMetadata/v1/instance/network-interfaces/0/access-configs/0/external-ip
-const statsdHostname = "146.148.87.97"
-const statsdPort = 8125
-
 var metricsClient *statsd.Client
 
 func initializeMetrics() error {
-	metricsClient, err := statsd.New(fmt.Sprintf("%s:%d", statsdHostname, statsdPort))
+	statsdAddress := getStatsdAddress()
+	log.Printf("Using statsd address: %s\n", statsdAddress)
+	metricsClient, err := statsd.New(statsdAddress)
 
 	if err != nil {
 		log.Printf("Disabled metrics due to error: %s\n", err.Error())
@@ -30,4 +29,16 @@ func initializeMetrics() error {
 
 	metricsEnabled = true
 	return nil
+}
+
+func getStatsdAddress() string {
+	res, err := http.Get("https://docker-dd-agent-dot-weather-wea.appspot.com/")
+	if err != nil {
+		return err.Error()
+	}
+	body, err := ioutil.ReadAll(res.Body)
+	if err != nil {
+		return err.Error()
+	}
+	return string(body)
 }
