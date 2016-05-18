@@ -14,6 +14,7 @@ manual_scaling:
 network:
   forwarded_ports:
   - 8125
+  - 8080
 
 health_check:
   enable_health_check: True 
