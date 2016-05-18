@@ -8,6 +8,11 @@ import (
 )
 
 func getForecast(w http.ResponseWriter, r *http.Request) {
+	if err := metricsClient.Count("get.forecast.count", 1, []string{}, 1.0); err != nil {
+		log.Printf("failed to send out metric get.forecast.count: %s\n", err.Error())
+		w.WriteHeader(500)
+		return
+	}
 	q := r.URL.Query()
 	c, ok := q["cityId"]
 	if !ok {
