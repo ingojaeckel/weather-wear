@@ -14,7 +14,7 @@ var metricsClient *statsd.Client
 func initializeMetrics() error {
 	statsdAddress := getStatsdAddress()
 	log.Printf("Using statsd address: %s\n", statsdAddress)
-	metricsClient, err := statsd.New(statsdAddress)
+	metricsClient, err := statsd.New(fmt.Sprintf("%s:8125", statsdAddress))
 
 	if err != nil {
 		log.Printf("Disabled metrics due to error: %s\n", err.Error())
