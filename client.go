@@ -55,7 +55,7 @@ func (p HttpWeatherProvider) GetWeather(cityID string) (SimpleWeatherResponse, e
 }
 
 func getWeatherProvider() (HttpWeatherProvider, error) {
-	val, err := ioutil.ReadFile("configuration.txt")
+	val, err := ioutil.ReadFile("/configuration.txt")
 	if err != nil {
 		return HttpWeatherProvider{}, err
 	}
