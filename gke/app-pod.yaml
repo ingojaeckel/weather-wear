@@ -1,0 +1,16 @@
+apiVersion: v1
+kind: Pod
+metadata:
+  name: weather-wear-pod
+  labels:
+    app: web
+spec:
+  containers:
+    - name: metrics-backend
+      image: datadog/docker-dd-agent
+      ports:
+        - containerPort: 8125
+    - name: frontend
+      image: gcr.io/weather-wea/hello-node:v2
+      ports:
+        - containerPort: 8080
