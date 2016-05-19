@@ -2,9 +2,7 @@ package main
 
 import (
 	"fmt"
-	"io/ioutil"
 	"log"
-	"net/http"
 
 	"github.com/DataDog/datadog-go/statsd"
 )
@@ -12,9 +10,10 @@ import (
 var metricsClient *statsd.Client
 
 func initializeMetrics() error {
-	statsdAddress := getStatsdAddress()
+	statsdAddress := "127.0.0.1:8125"
 	log.Printf("Using statsd address: %s\n", statsdAddress)
-	metricsClient, err := statsd.New(fmt.Sprintf("%s:8125", statsdAddress))
+	m, err := statsd.New(statsdAddress)
+	metricsClient = m
 
 	if err != nil {
 		log.Printf("Disabled metrics due to error: %s\n", err.Error())
@@ -29,16 +28,4 @@ func initializeMetrics() error {
 
 	metricsEnabled = true
 	return nil
-}
-
-func getStatsdAddress() string {
-	res, err := http.Get("https://docker-dd-agent-dot-weather-wea.appspot.com/")
-	if err != nil {
-		return err.Error()
-	}
-	body, err := ioutil.ReadAll(res.Body)
-	if err != nil {
-		return err.Error()
-	}
-	return string(body)
 }
