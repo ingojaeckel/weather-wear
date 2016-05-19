@@ -8,9 +8,13 @@ spec:
   containers:
     - name: metrics-backend
       image: datadog/docker-dd-agent
+      env:
+        -
+          name: "API_KEY"
+          value: "fb75037c7f88c377d412c4130c650df9"
       ports:
         - containerPort: 8125
     - name: frontend
-      image: gcr.io/weather-wea/hello-node:v2
+      image: gcr.io/weather-wea/front-end:v1
       ports:
         - containerPort: 8080
