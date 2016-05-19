@@ -13,7 +13,7 @@ func helloWorld(w http.ResponseWriter, r *http.Request) {
 }
 
 func connect(w http.ResponseWriter, r *http.Request) {
-	if _, err := net.DialTimeout("tcp", "146.148.87.97:8125", 5 * time.Second); err != nil {
+	if _, err := net.DialTimeout("tcp", "104.197.204.165:8125", 5 * time.Second); err != nil {
 		fmt.Fprint(w, err.Error())
 		return
 	}	
