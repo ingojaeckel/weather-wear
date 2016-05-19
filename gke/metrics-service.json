@@ -1,0 +1,17 @@
+{
+    "kind": "Service",
+    "apiVersion": "v1",
+    "metadata": {
+        "name": "metrics"
+    },
+    "spec": {
+        "ports": [
+            {
+                "protocol": "UDP",
+                "port": 8125,
+                "targetPort": 8125
+            }
+        ]
+    }
+}
+

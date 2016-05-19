@@ -3,6 +3,7 @@ package main
 import (
 	"fmt"
 	"log"
+	"os"
 
 	"github.com/DataDog/datadog-go/statsd"
 )
@@ -10,7 +11,7 @@ import (
 var metricsClient *statsd.Client
 
 func initializeMetrics() error {
-	statsdAddress := "127.0.0.1:8125"
+	statsdAddress := fmt.Sprintf("%s:%s", os.Getenv("METRICS_SERVICE_HOST"), os.Getenv("METRICS_SERVICE_PORT"))
 	log.Printf("Using statsd address: %s\n", statsdAddress)
 	m, err := statsd.New(statsdAddress)
 	metricsClient = m
