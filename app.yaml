@@ -1,12 +1,18 @@
-runtime: go
-vm: true
+runtime: custom
 
 # use .1 values to force use of f1-micro instances
 resources:
-  cpu: .1
-  memory_gb: .1
+  cpu: 1
+  memory_gb: 1
   disk_size_gb: 10
 
-automatic_scaling:
-  min_num_instances: 1
-  max_num_instances: 1
+manual_scaling:
+  instances: 1
+
+network:
+  forwarded_ports:
+  - 8125
+
+health_check:
+  enable_health_check: True
+
