@@ -25,7 +25,12 @@ func initializeMetrics() error {
 	// prefix every metric with the app name
 	metricsClient.Namespace = "dev."
 	metricsClient.Tags = append(metricsClient.Tags, fmt.Sprintf("appid:weather-wea"))
-	metricsClient.SimpleEvent("initialized", "datadog has been initialized")
+
+	if err := metricsClient.SimpleEvent("initialized", "datadog has been initialized"); err != nil {
+		log.Printf("Disabled metrics due to error: %s\n", err.Error())
+		metricsEnabled = false
+		return err
+	}
 
 	metricsEnabled = true
 	return nil
