@@ -1,1 +1,1 @@
-kubectl create -f metrics-service.json
+kubectl create -f service.json

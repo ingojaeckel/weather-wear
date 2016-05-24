@@ -1,2 +1,2 @@
 #!/bin/sh
-kubectl create -f app-pod.yaml
+kubectl create -f pod.yaml
